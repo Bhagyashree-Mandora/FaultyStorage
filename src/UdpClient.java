@@ -10,34 +10,23 @@ public class UdpClient {
     private InetAddress host;
 
     public UdpClient() throws SocketException, UnknownHostException {
-//        ListenAtSocket = new DatagramSocket(LISTEN_AT_PORT);
+        ListenAtSocket = new DatagramSocket(LISTEN_AT_PORT);
         sendToSocket = new DatagramSocket();
         host = InetAddress.getByName("localhost");
     }
 
-//    public void receiveData() {
-//        byte[] buffer = new byte[60];
-//        DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-//        try {
-//            ListenAtSocket.receive(reply);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        byte[] data = reply.getData();
-//
-//        Message recvMsg = Message.Decode(data);
-//    }
-
-    public void sendData() throws IOException {
-        Message sendMsg = new Message();
-
-        byte[] b = sendMsg.Encode();
-        ByteBuffer buffer = ByteBuffer.wrap(b);
-        String s = new String(buffer.array());
-        System.out.println(s);
-        DatagramPacket datagramPacket = new DatagramPacket(b, 48, host, SEND_TO_PORT);
+    public byte[] sendData(byte[] data) throws IOException {
+        DatagramPacket datagramPacket = new DatagramPacket(data, data.length, host, SEND_TO_PORT);
         sendToSocket.send(datagramPacket);
-    }
 
+        byte[] buffer = new byte[49];
+        DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+        try {
+            ListenAtSocket.receive(reply);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return reply.getData();
+    }
 }
