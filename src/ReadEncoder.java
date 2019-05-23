@@ -1,12 +1,12 @@
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-public class ReadMessage extends Message {
+public class ReadEncoder extends Encoder {
 
     private static final String OPCODE = "R";
     private static final int ENCODE_SIZE = 37;
 
-    public String[] decode(byte[] data) throws Exception {
+    public Message decode(byte[] data) throws Exception {
         if (data.length == RESPONSE_SIZE && (char) data[0] == 'D') {
             if (data[RESPONSE_SIZE - 1] == 1) {
                 //char opcode = (char) data[0];
@@ -14,14 +14,15 @@ public class ReadMessage extends Message {
                 byte[] loc = Arrays.copyOfRange(data, 33, 37);
                 int location = getIntFromByteArray(loc);
                 int dataLen = data[37];
-                String payloadData = new String(Arrays.copyOfRange(data, 38, 48)).trim();
-                System.out.println(filename + " " + location + " " + dataLen + " " + payloadData);
-                return new String[]{filename, String.valueOf(location), String.valueOf(dataLen), payloadData};
+                byte[] payloadData = Arrays.copyOfRange(data, 38, 48);
+                //System.out.println(filename + " " + location + " " + dataLen + " " + payloadData);
+                return new Message(filename, location, dataLen, payloadData);
+                //return new String[]{filename, String.valueOf(location), String.valueOf(dataLen), payloadData};
             }
-        } else {
-            throw new Exception("Wrong UDP response size");
+//        } else {
+//            throw new Exception("Wrong UDP response size");
         }
-        return new String[0];
+        return null;
     }
 
     public byte[] encode(String filename, byte[] data, int offset) {

@@ -1,11 +1,25 @@
-public abstract class Message {
-    static final int RESPONSE_SIZE = 49;
+import java.util.Arrays;
 
-    public abstract String[] decode(byte[] data) throws Exception;
+public class Message {
+    public byte[] data;
+    public String fileName;
+    public int dataLen;
+    public int offset;
 
-    public abstract byte[] encode(String filename, byte[] data, int offset);
+    public Message() {
+    }
 
-    int getIntFromByteArray(byte[] bytes) {
-        return bytes[3] << 24 | (bytes[2] & 0xFF) << 16 | (bytes[1] & 0xFF) << 8 | (bytes[0] & 0xFF);
+    public Message(String fileName, int offset, int dataLen, byte[] data) {
+        this.fileName = fileName;
+        this.offset = offset;
+        this.dataLen = dataLen;
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "data=" + Arrays.toString(data) +
+                '}';
     }
 }

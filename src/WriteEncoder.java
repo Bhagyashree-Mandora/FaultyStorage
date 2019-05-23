@@ -1,12 +1,11 @@
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
-public class WriteMessage extends Message {
+public class WriteEncoder extends Encoder {
 
     private static final String OPCODE = "W";
     private static final int ENCODE_SIZE = 48;
 
-    public String[] decode(byte[] data) throws Exception {
+    public Message decode(byte[] data) throws Exception {
         if (data.length == RESPONSE_SIZE && (char) data[0] == 'A') {
             if (data[RESPONSE_SIZE - 1] == 1) {
 //                char opcode = (char) data[0];
@@ -16,12 +15,12 @@ public class WriteMessage extends Message {
 //                int dataLen = data[37];
 //                String payloadData = new String(Arrays.copyOfRange(data, 38,48)).trim();
 //                System.out.println(opcode + " " + filename + " " + location + " " + dataLen + " " + payloadData);
-                return new String[]{"write successful"};
+                return new Message();
             }
-        } else {
-            throw new Exception("Wrong UDP response size");
+//        } else {
+//            throw new Exception("Wrong UDP response size");
         }
-        return new String[0];
+        return null;
     }
 
     public byte[] encode(String filename, byte[] data, int offset) {
